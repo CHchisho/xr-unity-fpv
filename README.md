@@ -17,3 +17,9 @@ Scene: `Assets/Scenes/FirstPersonCourse.unity`.
 - A sliding gate that blocks the path and can be jumped over.
 - An on-screen counter and status text.
 - Escape releases the cursor; a mouse click locks it again.
+
+## Added for V2
+
+- The photogrammetry sneaker turns while you look at it, so the scan can be inspected from all sides.
+- The center reticle turns blue on an info hotspot and gold on a teleport portal.
+- Escape releases the cursor; a mouse click locks it again.
