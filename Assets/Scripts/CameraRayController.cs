@@ -69,6 +69,8 @@ public class CameraRayController : MonoBehaviour
 
         if (gameObjectName == "Sneaker")
             infoText.text = "Photogrammetry sneaker\nScanned shoe from the media lab. Keep looking and the model turns so you can inspect it.";
+        else if (gameObjectName == "SneakerKiri")
+            infoText.text = "KIRI sneaker\nShoe scan from KIRI Engine. Keep looking and this model turns as well.";
         else if (gameObjectName == "PanoramaMarker")
             infoText.text = "Stitched lab panorama\nA different photo from the Ricoh room. Look at the portal for two seconds to go back.";
         else
