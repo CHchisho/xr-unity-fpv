@@ -23,3 +23,12 @@ Scene: `Assets/Scenes/FirstPersonCourse.unity`.
 - The photogrammetry sneaker turns while you look at it, so the scan can be inspected from all sides.
 - The center reticle turns blue on an info hotspot and gold on a teleport portal.
 - Escape releases the cursor; a mouse click locks it again.
+
+## VR bowling
+
+Scene: `Assets/Scenes/BowlingAlley.unity`.
+
+- Left stick walks, right stick snap-turns. Point and press the trigger to teleport onto the approach or the side decks.
+- Grip grabs the ball. Let go to throw it. Knocked pins buzz the controllers.
+- The red button resets the pins and the ball. The scoreboard counts how many pins have fallen.
+- The pin, ball, and alley are low-poly models made for this scene.
