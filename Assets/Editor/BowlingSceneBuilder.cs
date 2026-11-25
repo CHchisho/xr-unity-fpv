@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Turning;
 using Unity.XR.CoreUtils;
@@ -35,7 +34,6 @@ public static class BowlingSceneBuilder
         AddStaticColliders(alley);
 
         GameObject pinPrefab = LoadModel("Assets/Models/Bowling/Pin.glb");
-        GameObject ballPrefab = LoadModel("Assets/Models/Bowling/Ball.glb");
 
         Renderer laneRenderer = FindNamed(alley.transform, "Lane").GetComponent<Renderer>();
         Bounds laneBounds = laneRenderer.bounds;
@@ -60,30 +58,6 @@ public static class BowlingSceneBuilder
             }
         }
 
-        Transform stand = FindNamed(alley.transform, "BallStand");
-        Vector3 ballPosition = stand != null
-            ? stand.position + Vector3.up * 0.45f
-            : new Vector3(-0.9f, floorY + 0.2f, -0.4f);
-        GameObject ball = Object.Instantiate(ballPrefab, ballPosition, Quaternion.identity);
-        ball.name = "Ball";
-        Rigidbody ballBody = AddBody(ball, 5.5f, true);
-        XRGrabInteractable grab = ball.AddComponent<XRGrabInteractable>();
-        grab.movementType = XRBaseInteractable.MovementType.VelocityTracking;
-        grab.throwOnDetach = true;
-        grab.throwVelocityScale = 1.6f;
-        grab.throwAngularVelocityScale = 1f;
-
-        SphereCollider ballSphere = ball.GetComponent<SphereCollider>();
-        if (ballSphere == null)
-        {
-            ballSphere = ball.AddComponent<SphereCollider>();
-            ballSphere.radius = 0.108f;
-            ballSphere.center = Vector3.zero;
-        }
-        MeshCollider[] ballMeshes = ball.GetComponentsInChildren<MeshCollider>();
-        for (int i = 0; i < ballMeshes.Length; i++)
-            Object.DestroyImmediate(ballMeshes[i]);
-
         Transform approach = FindNamed(alley.transform, "Approach");
         if (approach != null)
             approach.gameObject.AddComponent<TeleportationArea>();
@@ -105,14 +79,6 @@ public static class BowlingSceneBuilder
         XROrigin xrOrigin = origin.GetComponent<XROrigin>();
         if (xrOrigin != null)
             xrOrigin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
-
-        GameObject button = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        button.name = "ResetButton";
-        button.transform.position = new Vector3(0.72f, 1.05f, 1.55f);
-        button.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        button.transform.localScale = new Vector3(0.18f, 0.18f, 0.08f);
-        button.GetComponent<Renderer>().sharedMaterial = MakeMaterial("ResetButton", new Color(0.8f, 0.15f, 0.12f), 0.4f);
-        XRSimpleInteractable reset = button.AddComponent<XRSimpleInteractable>();
 
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         GameObject canvasObject = new GameObject("Scoreboard");
@@ -143,15 +109,13 @@ public static class BowlingSceneBuilder
         GameObject matchObject = new GameObject("BowlingMatch");
         BowlingMatch match = matchObject.AddComponent<BowlingMatch>();
         match.pins = pins;
-        match.ballBody = ballBody;
-        match.ballGrab = grab;
-        match.resetButton = reset;
         match.scoreText = text;
+        BowlingWorkflow.Install();
 
         string path = "Assets/Scenes/BowlingAlley.unity";
         EditorSceneManager.SaveScene(scene, path);
         AddSceneToBuild(path);
-        return "Saved " + path + " lane " + laneBounds + " ball " + ballPosition;
+        return "Saved " + path + " lane " + laneBounds;
     }
 
     static void PlaceEnvironment()
